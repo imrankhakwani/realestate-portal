@@ -7,9 +7,6 @@ import { getAnalytics } from "firebase/analytics";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
-console.log('apiKey', import.meta.env.VITE_FIREBASE_API_KEY)
-console.log('DEV_MODE', import.meta.env.DEV)
-
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "realestate-ed2a3.firebaseapp.com",

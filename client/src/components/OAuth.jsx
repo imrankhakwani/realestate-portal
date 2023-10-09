@@ -38,7 +38,8 @@ export default function OAuth() {
     <button 
       type='button'
       onClick={handleGoogleSignin}
-      className='bg-orange-700 text-white p-3 rounded-lg uppercase hover:opacity-95'>
+      className='bg-orange-700 text-white p-3 rounded-lg uppercase hover:opacity-95'
+    >
       continue with google
     </button>
   )
