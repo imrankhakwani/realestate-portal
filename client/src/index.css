@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 body {
-  background-color: rgb(241, 245, 241);
+  /* background-color: #fffffa; */
+  background-color: #f2efea;
   font-family: "Mukta", sans-serif;
+}
+
+header {
+  /* background-color: #98d2eb; */
+  background-color: #565eaf;
 }
