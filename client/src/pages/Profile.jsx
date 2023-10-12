@@ -10,7 +10,10 @@ import { app } from '../firebase.js'
 import {
   updateUserStart,
   updateUserSuccess,
-  updateUserFailure
+  updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure
 } from '../redux/user/userSlice.js'
 import { useDispatch } from 'react-redux'
 
@@ -56,6 +59,28 @@ export default function Profile() {
     )
   }
 
+
+  const handleDeleteUser = async() {
+    try {
+      dispatch(deleteUserStart())
+
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE'
+      })
+
+      const data = await res.json()
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message))
+        return
+      }
+
+      dispatch(deleteUserSuccess(data))
+
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message))
+    }
+  }
+
   const handleChange = async (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value })
   }
@@ -63,26 +88,28 @@ export default function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(updateUserStart());
+      dispatch(updateUserStart())
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
-      });
-      const data = await res.json();
+      })
+
+      const data = await res.json()
       if (data.success === false) {
-        dispatch(updateUserFailure(data.message));
-        return;
+        dispatch(updateUserFailure(data.message))
+        return
       }
 
-      dispatch(updateUserSuccess(data));
-      setUpdateSuccess(true);
+      dispatch(updateUserSuccess(data))
+      setUpdateSuccess(true)
     } catch (error) {
-      dispatch(updateUserFailure(error.message));
+      dispatch(updateUserFailure(error.message))
     }
-  };
+  }
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>
@@ -146,10 +173,16 @@ export default function Profile() {
         </button>
       </form>
       <div className='flex justify-between'>
-        <span className='text-red-600 cursor-pointer mt-5 hover:opacity-80'>Delete</span>
+        <span 
+          onClick={handleDeleteUser}
+          className='text-red-600 cursor-pointer mt-5 hover:opacity-80'
+        >
+          Delete
+        </span>
         <span className='text-red-600 cursor-pointer mt-5 hover:opacity-80'>Sign out</span>
       </div>
       <p className='text-red-500 mt-5'>{ error ? error : '' }</p>
+      <p className='text-green-500 mt-5'>{ updateSuccess ? 'User successfully updated' : '' }</p>
     </div>
   )
 }

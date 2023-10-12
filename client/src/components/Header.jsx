@@ -36,7 +36,7 @@ export default function Header() {
               <img
                 src={currentUser.avatar}
                 alt='profile'
-                className='rounded-full h-7 w-7 object-cover'
+                className='bg-white rounded-full h-7 w-7 object-cover'
               />
             ) : (
               <li className='sm:inline text-slate-700 hover:text-slate-400'>
