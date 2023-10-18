@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import { useRef, useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import {
   getDownloadURL,
   getStorage,
@@ -13,7 +14,10 @@ import {
   updateUserFailure,
   deleteUserStart,
   deleteUserSuccess,
-  deleteUserFailure
+  deleteUserFailure,
+  signoutUserStart,
+  signoutUserSuccess,
+  signoutUserFailure
 } from '../redux/user/userSlice.js'
 import { useDispatch } from 'react-redux'
 
@@ -60,7 +64,7 @@ export default function Profile() {
   }
 
 
-  const handleDeleteUser = async() {
+  const handleDeleteUser = async() => {
     try {
       dispatch(deleteUserStart())
 
@@ -78,6 +82,23 @@ export default function Profile() {
 
     } catch (error) {
       dispatch(deleteUserFailure(error.message))
+    }
+  }
+
+  const handleSignout = async() => {
+    try {
+      dispatch(signoutUserStart())
+      const res = fetch('/api/auth/signout')
+      const data = await res.json()
+
+      if (data.success === false) {
+        dispatch(signoutUserFailure(data.message))
+        return
+      }
+
+      dispatch(signoutUserSuccess(data))
+    } catch (error) {
+      dispatch(signoutUserFailure(error.message))
     }
   }
 
@@ -171,6 +192,12 @@ export default function Profile() {
         >
           { loading ? 'loading...' : 'update'}
         </button>
+        <Link
+          className='bg-green-700 text-white p-3 rounded-lg upercase text-center hover:opacity-95'
+          to='/create-listing'
+        >
+          Create Listing
+        </Link>
       </form>
       <div className='flex justify-between'>
         <span 
@@ -179,7 +206,9 @@ export default function Profile() {
         >
           Delete
         </span>
-        <span className='text-red-600 cursor-pointer mt-5 hover:opacity-80'>Sign out</span>
+        <span 
+          onClick={handleSignout}
+          className='text-red-600 cursor-pointer mt-5 hover:opacity-80'>Sign out</span>
       </div>
       <p className='text-red-500 mt-5'>{ error ? error : '' }</p>
       <p className='text-green-500 mt-5'>{ updateSuccess ? 'User successfully updated' : '' }</p>
